@@ -23,6 +23,7 @@ public class AccountController {
         return new ApiResponse(HttpStatus.OK.value(),"query account successfully",accountService.getAllAccounts());
     }
 
+    @GetMapping("/profile")
     private ApiResponse<Account> getProfile(@RequestBody Account account) {
         var data = accountService.getProfile(account);
         if (data.size() > 0 ) {
