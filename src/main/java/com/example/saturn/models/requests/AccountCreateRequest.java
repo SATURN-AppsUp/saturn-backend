@@ -10,16 +10,15 @@ import java.time.LocalDate;
 public class AccountCreateRequest {
     @NotEmpty(message = "username can not be null")
     private String username;
-    @NotEmpty(message = "pass can not be null")
+    @NotEmpty(message = "password can not be null")
     private String password;
     @NotEmpty(message = "name can not be null")
     private String name;
     private LocalDate dob;
-    @NotEmpty
+    @NotEmpty(message = "phone cannot be null")
     private String phone;
     @NotEmpty(message = "email can not be null")
     private String email;
-    @NotEmpty
     private boolean gender;
     private boolean isSeller;
 

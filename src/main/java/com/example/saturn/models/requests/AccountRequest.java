@@ -1,40 +1,39 @@
-package com.example.saturn.models;
+package com.example.saturn.models.requests;
 
 import com.example.saturn.models.enums.AccountStatus;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
-
-import java.time.LocalDate;
-
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
-import org.springframework.data.mongodb.core.mapping.Document;
 
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
+import java.time.LocalDate;
 
 @Data
 @AllArgsConstructor
-public class Account {
-    @Id
-    private int id;
+public class AccountRequest {
     private String username;
-    @JsonIgnore
-    private String password;
+    @Nullable
     private String name;
+    @Nullable
     private LocalDate dob;
+    @Nullable
     private String phone;
-    @Indexed
+    @Nullable
     private String email;
+    @Nullable
     private AccountStatus status;
+    @Nullable
     private boolean gender;
+    @Nullable
     private boolean isSeller;
+    @Nullable
     private int deliveredOrders;
+    @Nullable
     private int processingOrders;
+    @Nullable
     private int waitToConfirmedOrders;
+    @Nullable
     private int points;
-
-
 }
