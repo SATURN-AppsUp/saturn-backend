@@ -13,10 +13,11 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 public class SellerCreateRequest {
-    private int userId;
+    @NotEmpty(message = "username can not be null")
+    private String username;
     @NotEmpty(message = "sellerName can not be null")
     private String sellerName;
-    private String sellAdress;
+    private String sellerAdress;
     @NotEmpty(message = "payment methods can not be null")
     private List<PaymentMethod> acceptedPaymentMethods;
 }

@@ -23,7 +23,10 @@ public class AccountController {
 
     @GetMapping
     private ResponseEntity getAllAccounts() {
-        return  ApiResponseHandler.Respond(HttpStatus.OK,"query account successfully",accountService.getAllAccounts());
+        return  ApiResponseHandler.Respond(
+                HttpStatus.OK,
+                "query account successfully",
+                accountService.getAllAccounts());
     }
 
     @GetMapping("/profile")

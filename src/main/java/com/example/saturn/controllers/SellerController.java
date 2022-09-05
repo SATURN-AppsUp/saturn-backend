@@ -4,9 +4,13 @@ import com.example.saturn.models.Account;
 import com.example.saturn.models.Seller;
 import com.example.saturn.models.requests.ApiResponse;
 import com.example.saturn.models.requests.SellerCreateRequest;
+import com.example.saturn.models.requests.SellerUpdateRequest;
 import com.example.saturn.services.SellerService;
+import com.example.saturn.utils.ApiResponseHandler;
 import lombok.AllArgsConstructor;
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,32 +26,38 @@ public class SellerController {
 
     private final SellerService sellerService;
 
-//    @GetMapping
-//    private ApiResponse<Seller> getSeller(@RequestBody Seller seller) {
-//        List data = new ArrayList();
-//        var result = sellerService.getSeller(seller);
-//        if (result.size() > 0) {
-//            return new ApiResponse(HttpStatus.OK.value(), "Query seller successfully", result);
-//        }
-//        else {
-//            return new ApiResponse<>(HttpStatus.NOT_FOUND.value(), "Not found any matched seller", List.of());
-//        }
-//    }
-//
-//    @PostMapping
-//    private ApiResponse<Account> createSeller(@Valid @RequestBody SellerCreateRequest request) {
-//        List data = new ArrayList<Account>();
-//        try {
-//            var result = sellerService.createSeller(request);
-//            if (result.getId() > 0) {
-//                data.add(result);
-//                return new ApiResponse<Account>(HttpStatus.CREATED.value(), "Account created successfully", data);
-//            } else {
-//                return new ApiResponse<Account>(HttpStatus.INTERNAL_SERVER_ERROR.value(), "Account created fail", data);
-//            }
-//        } catch (Exception e) {
-//            var errorMessage = e.getMessage().length() > 0 ? e.getMessage() : "Account created fail";
-//            return new ApiResponse<Account>(HttpStatus.INTERNAL_SERVER_ERROR.value(), errorMessage, data);
-//        }
-//    }
+    @GetMapping
+    private ResponseEntity<Seller> getSeller(@RequestBody Seller seller) {
+        var result = sellerService.getSeller(seller);
+        if (result.size() > 0) {
+            return ApiResponseHandler.Respond(HttpStatus.OK, "Query seller successfully", result);
+        }
+        else {
+            return ApiResponseHandler.Respond(HttpStatus.NOT_FOUND, "Not found any matched seller", List.of());
+        }
+    }
+
+    @PutMapping
+    private ResponseEntity<Seller> updateSeller(@RequestBody SellerUpdateRequest request) {
+        var result = sellerService.updateSeller(request);
+        if (result.size() > 0) {
+            return ApiResponseHandler.Respond(HttpStatus.OK, "updated seller successfully", result);
+        } return ApiResponseHandler.Respond(HttpStatus.NOT_FOUND, "not found any seller", List.of());
+    }
+    @PostMapping
+    private ResponseEntity<Seller> createSeller(@Valid @RequestBody SellerCreateRequest request) {
+        List data = new ArrayList<Account>();
+        try {
+            var result = sellerService.createSeller(request);
+            if (result.getId() > 0) {
+                data.add(result);
+                return ApiResponseHandler.Respond(HttpStatus.CREATED, "Account created successfully", data);
+            } else {
+                return ApiResponseHandler.Respond(HttpStatus.INTERNAL_SERVER_ERROR, "Account created fail", data);
+            }
+        } catch (Exception e) {
+            var errorMessage = e.getMessage().length() > 0 ? e.getMessage() : "Account created fail";
+            return ApiResponseHandler.Respond(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, data);
+        }
+    }
 }

@@ -12,12 +12,12 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document
 public class Store {
     private int sellerId;
-    private int sellerCode;
+    private String sellerCode;
     @Id
     private int storeId;
     private String storeName;
     private String storeCode;
-    private String storeBannerImg;
     private StoreStatus storeStatus;
+    private String storeBannerImageUrl;
 
 }

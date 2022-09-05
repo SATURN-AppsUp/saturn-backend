@@ -48,10 +48,17 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
-    public ResponseEntity<ApiResponse> customErrorHandle(IllegalArgumentException exception) {
+    public ResponseEntity<ApiResponse> IllegalArgumentHandle(IllegalArgumentException exception) {
         return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
                 List.of()),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(value={Exception.class})
+    public ResponseEntity<ApiResponse> otherErrorHandle(Exception e) {
+        return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage(),
+                List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 
