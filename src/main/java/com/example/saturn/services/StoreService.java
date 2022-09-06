@@ -57,15 +57,15 @@ public class StoreService {
     public List<Store> getStore(StoreRequest request) {
         var query = new Query();
         if (request.getStoreCode() != null && request.getStoreCode().length() > 0 ) {
-            query.addCriteria(where("store_code").is(request.getStoreCode()));
+            query.addCriteria(where("storeCode").is(request.getStoreCode()));
         }
 
         if (request.getSellerCode() != null && request.getSellerCode().length() > 0) {
-            query.addCriteria(where("seller_code").is(request.getSellerCode()));
+            query.addCriteria(where("sellerCode").is(request.getSellerCode()));
         }
 
         if (request.getStoreName() != null && request.getStoreCode().length() > 0) {
-            query.addCriteria(where("store_name").is(request.getStoreName()));
+            query.addCriteria(where("storeName").is(request.getStoreName()));
         }
 
         System.out.println(query.getQueryObject().size());

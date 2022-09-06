@@ -5,6 +5,7 @@ import com.example.saturn.models.Account;
 import com.example.saturn.models.Seller;
 import com.example.saturn.models.enums.SellerStatus;
 import com.example.saturn.models.requests.SellerCreateRequest;
+import com.example.saturn.models.requests.SellerRequest;
 import com.example.saturn.models.requests.SellerUpdateRequest;
 import com.example.saturn.repositories.SellerRepo;
 import lombok.AllArgsConstructor;
@@ -40,7 +41,7 @@ public class SellerService {
         var updateResult = sellerRepo.save(result);
         return List.of(updateResult);
     }
-    public List<Seller> getSeller(Seller seller) {
+    public List<Seller> getSeller(SellerRequest seller) {
         var query = new Query();
         var result = template.findOne(query,Seller.class);
         return List.of(result);

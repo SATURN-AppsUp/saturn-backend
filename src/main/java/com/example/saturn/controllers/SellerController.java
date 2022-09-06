@@ -4,6 +4,7 @@ import com.example.saturn.models.Account;
 import com.example.saturn.models.Seller;
 import com.example.saturn.models.requests.ApiResponse;
 import com.example.saturn.models.requests.SellerCreateRequest;
+import com.example.saturn.models.requests.SellerRequest;
 import com.example.saturn.models.requests.SellerUpdateRequest;
 import com.example.saturn.services.SellerService;
 import com.example.saturn.utils.ApiResponseHandler;
@@ -27,7 +28,7 @@ public class SellerController {
     private final SellerService sellerService;
 
     @GetMapping
-    private ResponseEntity<Seller> getSeller(@RequestBody Seller seller) {
+    private ResponseEntity<Seller> getSeller(SellerRequest seller) {
         var result = sellerService.getSeller(seller);
         if (result.size() > 0) {
             return ApiResponseHandler.Respond(HttpStatus.OK, "Query seller successfully", result);
@@ -51,12 +52,12 @@ public class SellerController {
             var result = sellerService.createSeller(request);
             if (result.getId() > 0) {
                 data.add(result);
-                return ApiResponseHandler.Respond(HttpStatus.CREATED, "Account created successfully", data);
+                return ApiResponseHandler.Respond(HttpStatus.OK, "Seller created successfully", data);
             } else {
-                return ApiResponseHandler.Respond(HttpStatus.INTERNAL_SERVER_ERROR, "Account created fail", data);
+                return ApiResponseHandler.Respond(HttpStatus.INTERNAL_SERVER_ERROR, "Seller created fail", data);
             }
         } catch (Exception e) {
-            var errorMessage = e.getMessage().length() > 0 ? e.getMessage() : "Account created fail";
+            var errorMessage = e.getMessage().length() > 0 ? e.getMessage() : "Seller created fail";
             return ApiResponseHandler.Respond(HttpStatus.INTERNAL_SERVER_ERROR, errorMessage, data);
         }
     }
