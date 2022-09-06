@@ -26,8 +26,9 @@ public class StoreService {
     private final GenIdService genIdService;
 
     public List<Store> createStore(StoreCreateRequest request) {
-        var isStoreExisted = template.exists(query(where("seller_id").is(request.getSellerId())),Store.class);
+        var isStoreExisted = template.exists(query(where("sellerId").is(request.getSellerId())),Store.class);
         var storeCode = "";
+        System.out.println(isStoreExisted + " " + request.getSellerId());
 
         if (isStoreExisted) {
             throw new IllegalArgumentException("Store with this seller already existed");
@@ -38,7 +39,7 @@ public class StoreService {
                 throw new NullPointerException("not found any matched seller");
             }
             storeCode = utilService.genRandomCode(10);
-            var existStoreWithCode = template.exists(query(where("store_code").is(storeCode)),Store.class);
+            var existStoreWithCode = template.exists(query(where("storeCode").is(storeCode)),Store.class);
             if (existStoreWithCode) {
                 storeCode = utilService.genRandomCode(10);
             }
@@ -67,6 +68,10 @@ public class StoreService {
             query.addCriteria(where("store_name").is(request.getStoreName()));
         }
 
+        System.out.println(query.getQueryObject().size());
+        if (query.getQueryObject().size() == 0 ) {
+            return template.findAll(Store.class);
+        }
         return template.find(query,Store.class);
     }
 }
