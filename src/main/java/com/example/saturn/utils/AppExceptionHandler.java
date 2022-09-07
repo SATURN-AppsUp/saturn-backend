@@ -2,6 +2,7 @@ package com.example.saturn.utils;
 
 import com.example.saturn.models.Account;
 import com.example.saturn.models.requests.ApiResponse;
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
@@ -14,6 +15,7 @@ import org.springframework.web.context.request.WebRequest;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeParseException;
 import java.util.List;
 
 
@@ -46,6 +48,21 @@ public class AppExceptionHandler {
                 List.of()),HttpStatus.NOT_FOUND);
     }
 
+    @ExceptionHandler(InvalidFormatException.class)
+    public ResponseEntity<ApiResponse> invalidFormatHandle(InvalidFormatException exception) {
+        return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                List.of()),HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(DateTimeParseException.class)
+    @ResponseBody
+    public ResponseEntity<ApiResponse> IllegalArgumentHandle(DateTimeParseException exception) {
+        return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST,
+                exception.getMessage(),
+                List.of()),HttpStatus.BAD_REQUEST);
+    }
+
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
     public ResponseEntity<ApiResponse> IllegalArgumentHandle(IllegalArgumentException exception) {
@@ -54,12 +71,12 @@ public class AppExceptionHandler {
                 List.of()),HttpStatus.BAD_REQUEST);
     }
 
-    @ExceptionHandler(value={Exception.class})
-    public ResponseEntity<ApiResponse> otherErrorHandle(Exception e) {
-        return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                e.getMessage(),
-                List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
-    }
+//    @ExceptionHandler(value={Exception.class})
+//    public ResponseEntity<ApiResponse> otherErrorHandle(Exception e) {
+//        return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+//                e.getMessage(),
+//                List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
+//    }
 
 
 }

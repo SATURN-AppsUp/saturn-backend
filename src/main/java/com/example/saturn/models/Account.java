@@ -1,6 +1,7 @@
 package com.example.saturn.models;
 
 import com.example.saturn.models.enums.AccountStatus;
+import com.example.saturn.models.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,7 +22,6 @@ public class Account {
     @Id
     private int id;
     private String username;
-    @JsonIgnore
     private String password;
     private String name;
     private LocalDate dob;
@@ -29,7 +29,7 @@ public class Account {
     @Indexed
     private String email;
     private AccountStatus status;
-    private boolean gender;
+    private Gender gender;
     private boolean isSeller;
     private int deliveredOrders;
     private int processingOrders;

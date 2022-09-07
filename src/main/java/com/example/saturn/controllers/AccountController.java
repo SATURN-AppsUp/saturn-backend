@@ -3,7 +3,6 @@ package com.example.saturn.controllers;
 import com.example.saturn.models.Account;
 import com.example.saturn.models.requests.AccountCreateRequest;
 import com.example.saturn.models.requests.AccountRequest;
-import com.example.saturn.models.requests.ApiResponse;
 import com.example.saturn.services.AccountService;
 import com.example.saturn.utils.ApiResponseHandler;
 import lombok.AllArgsConstructor;
@@ -22,11 +21,15 @@ public class AccountController {
     private final AccountService accountService;
 
     @GetMapping
-    private ResponseEntity getAllAccounts() {
-        return  ApiResponseHandler.Respond(
+    private ResponseEntity getAccount(AccountRequest request) {
+        var accounts  = accountService.getAccounts(request);
+        if (accounts.size() > 0 )
+            return  ApiResponseHandler.Respond(
                 HttpStatus.OK,
                 "query account successfully",
-                accountService.getAllAccounts());
+                accounts);
+        else return  ApiResponseHandler.RespondError(HttpStatus.NOT_FOUND, "not found any matched accounts","ACCOUNT_NOT_FOUND");
+
     }
 
     @GetMapping("/profile")

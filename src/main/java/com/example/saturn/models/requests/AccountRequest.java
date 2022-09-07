@@ -1,6 +1,7 @@
 package com.example.saturn.models.requests;
 
 import com.example.saturn.models.enums.AccountStatus;
+import com.example.saturn.models.enums.Gender;
 import com.mongodb.lang.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -24,8 +25,8 @@ public class AccountRequest {
     private String email;
     @Nullable
     private AccountStatus status;
-    @Nullable
-    private boolean gender;
+//    @Nullable
+//    private Gender gender;
     @Nullable
     private boolean isSeller;
     @Nullable
