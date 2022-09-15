@@ -1,7 +1,9 @@
 package com.example.saturn.models.requests;
 
+import com.example.saturn.models.Address;
 import com.example.saturn.models.enums.Gender;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.mongodb.lang.Nullable;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
@@ -9,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class AccountCreateRequest {
@@ -16,7 +19,6 @@ public class AccountCreateRequest {
     @Pattern(regexp = "^[a-zA-Z0-9_]*$", message = "username can only contain characters.")
     private String username;
     @NotEmpty(message = "password can not be null")
-    @Min(8)
     private String password;
     @NotEmpty(message = "name can not be null")
     private String name;
@@ -28,6 +30,8 @@ public class AccountCreateRequest {
     private String email;
     @NotNull(message = "gender can't be null")
     private Gender gender;
+    @Nullable
+    private List<Address> addressList;
     private boolean isSeller;
 
 }

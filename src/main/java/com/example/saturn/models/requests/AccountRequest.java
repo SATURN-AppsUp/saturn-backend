@@ -25,8 +25,8 @@ public class AccountRequest {
     private String email;
     @Nullable
     private AccountStatus status;
-//    @Nullable
-//    private Gender gender;
+    @Nullable
+    private Gender gender;
     @Nullable
     private boolean isSeller;
     @Nullable

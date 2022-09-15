@@ -47,7 +47,8 @@ public class AccountService
                 0,
                 0,
                 0,
-                0
+                0,
+                request.getAddressList()
         );
         var query = new Query();
         query.addCriteria(where("email").is(acc.getEmail()));

@@ -8,13 +8,11 @@ import lombok.Data;
 
 
 import java.time.LocalDate;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
-
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 @Data
 @AllArgsConstructor
@@ -35,6 +33,5 @@ public class Account {
     private int processingOrders;
     private int waitToConfirmedOrders;
     private int points;
-
-
+    private List<Address> addressList;
 }

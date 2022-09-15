@@ -8,6 +8,7 @@ import com.example.saturn.utils.ApiResponseHandler;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -22,6 +23,7 @@ public class AccountController {
 
     @GetMapping
     private ResponseEntity getAccount(AccountRequest request) {
+//        System.out.println(bindingResult);
         var accounts  = accountService.getAccounts(request);
         if (accounts.size() > 0 )
             return  ApiResponseHandler.Respond(

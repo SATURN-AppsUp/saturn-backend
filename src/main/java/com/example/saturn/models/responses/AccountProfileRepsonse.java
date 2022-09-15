@@ -1,5 +1,6 @@
 package com.example.saturn.models.responses;
 
+import com.example.saturn.models.Address;
 import com.example.saturn.models.enums.AccountStatus;
 import com.example.saturn.models.enums.Gender;
 import lombok.Data;
@@ -7,7 +8,9 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 public class AccountProfileRepsonse {
@@ -25,4 +28,5 @@ public class AccountProfileRepsonse {
     private int processingOrders;
     private int waitToConfirmedOrders;
     private int points;
+    private List<Address> addressList;
 }

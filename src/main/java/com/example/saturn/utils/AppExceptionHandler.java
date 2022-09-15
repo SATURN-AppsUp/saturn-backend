@@ -7,6 +7,7 @@ import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BeanPropertyBindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -22,6 +23,13 @@ import java.util.List;
 @Order(Ordered.HIGHEST_PRECEDENCE)
 @ControllerAdvice
 public class AppExceptionHandler {
+
+    @ExceptionHandler(value={Exception.class})
+    public ResponseEntity<ApiResponse> otherErrorHandle(Exception e) {
+        return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
+                e.getMessage(),
+                List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 //    @ExceptionHandler(value={ApiRequestException.class})
 //    public ApiResponse<?> globalExceptionHandle(ApiRequestException e) {
 //
@@ -36,6 +44,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseBody
     public ResponseEntity<ApiResponse> customErrorHandle(MethodArgumentNotValidException exception) {
+        System.out.println(exception);
         return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST,
                 exception.getBindingResult().getFieldError().getDefaultMessage(),
                 List.of()),HttpStatus.BAD_REQUEST);
@@ -71,12 +80,7 @@ public class AppExceptionHandler {
                 List.of()),HttpStatus.BAD_REQUEST);
     }
 
-//    @ExceptionHandler(value={Exception.class})
-//    public ResponseEntity<ApiResponse> otherErrorHandle(Exception e) {
-//        return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-//                e.getMessage(),
-//                List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
-//    }
+
 
 
 }
