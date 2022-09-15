@@ -2,21 +2,28 @@ package com.example.saturn.models.requests;
 
 import com.example.saturn.models.enums.PaymentMethod;
 import com.example.saturn.models.enums.SellerStatus;
+import com.fasterxml.jackson.annotation.JsonSetter;
+import com.fasterxml.jackson.annotation.Nulls;
 import com.mongodb.lang.Nullable;
+import lombok.Data;
 
+import java.util.List;
+
+
+@Data
 public class SellerRequest {
     @Nullable
-    private String sellerCode;
+    @JsonSetter(nulls =  Nulls.SKIP)
+    private String sellerCode="";
     @Nullable
-    private String sellerName;
+    @JsonSetter(nulls =  Nulls.SKIP)
+    private String sellerName="";
     @Nullable
     private String userId;
     @Nullable
-    private boolean isVerified;
-    @Nullable
-    private String sellerAddress;
+    private Boolean isVerified;
     @Nullable
     private SellerStatus status;
     @Nullable
-    private PaymentMethod paymentMethod;
+    private List<PaymentMethod> paymentMethods;
 }

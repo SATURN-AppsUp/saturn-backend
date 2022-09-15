@@ -43,8 +43,31 @@ public class SellerService {
     }
     public List<Seller> getSeller(SellerRequest seller) {
         var query = new Query();
-        var result = template.findOne(query,Seller.class);
-        return List.of(result);
+        System.out.println(seller);
+        if (!seller.getSellerCode().isEmpty()) {
+            query.addCriteria(where("sellerCode").is(seller.getSellerCode()));
+        }
+        if (!seller.getSellerName().isEmpty()) {
+            query.addCriteria(where("sellerName").is(seller.getSellerName()));
+        }
+
+        if (seller.getUserId() != null && !seller.getUserId().isEmpty()) {
+            query.addCriteria(where("userId").is(seller.getUserId()));
+        }
+        if (seller.getIsVerified() != null) {
+            query.addCriteria(where("isVerified").is(seller.getIsVerified()));
+        }
+
+        if (seller.getStatus() != null && !seller.getStatus().toString().isEmpty()) {
+            query.addCriteria(where("status").is(seller.getStatus()));
+        }
+        if (seller.getPaymentMethods() != null && !seller.getPaymentMethods().isEmpty()) {
+            query.addCriteria(where("acceptedPaymentMethods").all(seller.getPaymentMethods()));
+        }
+        if (query.getQueryObject().size() == 0) {
+            return template.findAll(Seller.class);
+        }
+        return  template.find(query,Seller.class);
     }
     public Seller createSeller(SellerCreateRequest seller) {
         var query = new Query();
