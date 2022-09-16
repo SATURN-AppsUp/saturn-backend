@@ -2,6 +2,8 @@ plugins {
 	id 'org.springframework.boot' version '2.7.3'
 	id 'io.spring.dependency-management' version '1.0.13.RELEASE'
 	id 'java'
+	id "com.microsoft.azure.azurewebapp" version "1.1.0"
+
 }
 
 group = 'com.example'
@@ -37,3 +39,17 @@ dependencies {
 tasks.named('test') {
 	useJUnitPlatform()
 }
+
+azurewebapp {
+	subscription = 'b1f91e9f-32f5-4737-866e-fcaddfe069cd'
+	resourceGroup = 'SATURN'
+	appName = 'saturn-be'
+	pricingTier = 'F1'
+	region = 'northcentralus'
+	runtime {
+		os = 'Windows'
+		webContainer = 'Tomcat 9.0'
+		javaVersion = 'Java 11'
+	}
+}
+

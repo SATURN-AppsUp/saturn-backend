@@ -1,7 +1,9 @@
 package com.example.saturn.controllers;
 
+import com.example.saturn.models.SKU;
 import com.example.saturn.models.requests.ApiResponse;
 import com.example.saturn.models.requests.SKUCreateRequest;
+import com.example.saturn.models.requests.SKURequest;
 import com.example.saturn.services.SKUService;
 import com.example.saturn.utils.ApiResponseHandler;
 import lombok.AllArgsConstructor;
@@ -32,4 +34,9 @@ public class SKUController {
         }
         else return ApiResponseHandler.RespondError(HttpStatus.INTERNAL_SERVER_ERROR,"sku created failed","SKU_CREATE_ERROR");
     }
+
+//    @GetMapping
+//    public ResponseEntity getSKU(SKURequest request) {
+//        List<SKU> result = skuService.getSKUs(request);
+//    }
 }

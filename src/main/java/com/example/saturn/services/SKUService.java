@@ -4,8 +4,10 @@ package com.example.saturn.services;
 import com.example.saturn.models.SKU;
 import com.example.saturn.models.enums.SKUStatus;
 import com.example.saturn.models.requests.SKUCreateRequest;
+import com.example.saturn.models.requests.SKURequest;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,6 +19,11 @@ public class SKUService {
     private final MongoTemplate template;
     private final GenIdService genIdService;
 
+    public List<SKU> getSKUs(SKURequest sku) {
+        var query = new Query();
+
+        return template.find(query,SKU.class);
+    }
     public SKU createSKU(SKUCreateRequest sku) {
 
         if (sku.getBrand() != null || !sku.getCategoryCode().isBlank()) {
