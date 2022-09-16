@@ -48,7 +48,7 @@ azurewebapp {
 	region = 'northcentralus'
 	runtime {
 		os = 'Windows'
-		webContainer = 'Tomcat 9.0'
+		webContainer = 'Java SE'
 		javaVersion = 'Java 11'
 	}
 }
