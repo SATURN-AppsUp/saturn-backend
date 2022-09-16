@@ -39,7 +39,6 @@ public class SKURequest {
     @Nullable
 //    use Boolean instead of boolean to have null values
     private Boolean isActive;
-    @Nullable
     private int maximumOrderQuantity=0;
     @Nullable
     private int availableQuantity=0 ;
