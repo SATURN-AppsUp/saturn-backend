@@ -34,6 +34,11 @@ public class AccountController {
 
     }
 
+    @GetMapping("/test")
+    private ResponseEntity healthCheck() {
+        return ApiResponseHandler.Respond(HttpStatus.OK,"OK",List.of());
+    }
+
     @GetMapping("/profile")
     private ResponseEntity getProfile(AccountRequest account) {
         System.out.println(account);
