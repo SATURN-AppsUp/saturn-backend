@@ -1,9 +1,12 @@
 package com.example.saturn.services;
 
 
+import com.example.saturn.models.Category;
 import com.example.saturn.models.SKU;
 import com.example.saturn.models.SKUVariety;
 import com.example.saturn.models.Seller;
+import com.example.saturn.models.dao.BaseDao;
+import com.example.saturn.models.dao.VarietyDao;
 import com.example.saturn.models.enums.ProductType;
 import com.example.saturn.models.enums.SKUStatus;
 import com.example.saturn.models.enums.SaleType;
@@ -26,7 +29,9 @@ public class SKUService {
 
     private final MongoTemplate template;
     private final GenIdService genIdService;
+    private final CategoryService categoryService;
 
+    private final BaseDao<SKUVariety> varietyDao;
     public List<SKU> getSKUs(SKURequest sku) {
         var query = new Query();
         if (!sku.getSku().isEmpty()) {
@@ -70,11 +75,16 @@ public class SKUService {
     }
     public SKU createSKU(SKUCreateRequest sku) {
 //      validate sku from sellerCode
-
         if (!sku.getSku().isEmpty())
         {
-            var sellerCode = sku.getSku().split(".")[0];
-            if (sellerCode != sku.getSellerCode()) {
+//            check duplicate
+            var hasDuplicateSKU = template.exists(Query.query(where("sku").is(sku.getSku())), SKU.class);
+            if (hasDuplicateSKU) {
+                throw new IllegalArgumentException("sku already existed");
+            }
+            var sellerCode = sku.getSku().contains(".") ?  sku.getSku().split("\\.")[0] : "";
+            if (!sellerCode.equals(sku.getSellerCode())) {
+                System.out.println(sellerCode+", "+sku.getSellerCode());
                 throw new IllegalArgumentException("sku and seller have different sellerCode");
             }
             else {
@@ -84,6 +94,19 @@ public class SKUService {
                 }
             }
         }
+
+//      validate category
+        var categoryName = "";
+        if (sku.getCategoryCode() == null) {
+            var unlistedCat = template.findOne(Query.query(where("categoryCode").is("UNLISTED")), Category.class);
+            if (unlistedCat != null && !unlistedCat.getCategoryCode().isEmpty() && !unlistedCat.getCategoryName().isEmpty()) {
+                sku.setCategoryCode(unlistedCat.getCategoryCode());
+                categoryName = unlistedCat.getCategoryName();
+            } else {
+                categoryService.createCategory("UNLISTED","CAT_UNLISTED");
+            }
+        }
+
         if (sku.getProductType() == ProductType.ORDER) {
             sku.setStockQuantity(0);
             if (sku.getMinimumFulfillmentDays() <= 0) {
@@ -129,7 +152,7 @@ public class SKUService {
         }
         else {
            var defaultVariety =  sku.getVarietyList().stream().filter(SKUVariety::isDefault).findFirst().orElseThrow(() -> new IllegalArgumentException("variety list must have at least one default variety"));
-           if (defaultVariety.isValid()) {
+           if (!varietyDao.isValid(defaultVariety)) {
                throw new IllegalArgumentException("default variety's is not valid (unit price & quantity >= 0");
            }
         }
@@ -160,7 +183,7 @@ public class SKUService {
                 sku.getName(),
                 sku.getPackaging(),
                 sku.getCategoryCode(),
-                "TEMP_CATEGORY_NAME",
+                categoryName,
                 sku.getProductType(),
                 sku.getMinimumFulfillmentDays(),
                 sku.getStockQuantity(),

@@ -10,6 +10,7 @@ import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -28,7 +29,7 @@ public class SKUCreateRequest {
     private String packaging;
     @Nullable
     private String categoryCode;
-    @NotEmpty
+    @NotNull
     private ProductType productType;
     //    only availble to ORDER productType
     @Nullable
@@ -38,15 +39,15 @@ public class SKUCreateRequest {
     @Nullable
     @JsonSetter(nulls = Nulls.SKIP)
     private int stockQuantity=0;
-    @NotEmpty
+    @NotNull
     private SaleType saleType;
     @Nullable
     private RentInformation rentInformation;
     @NotEmpty
     private List<SKUVariety> varietyList;
-    @NotEmpty
+    @NotNull
     private ProductCondition productCondition;
-    @NotEmpty
+    @NotNull
     private ShippingType shippingType;
 //    not available when customer choose shipping type CUSTOMER_DELIVERY
     @Nullable

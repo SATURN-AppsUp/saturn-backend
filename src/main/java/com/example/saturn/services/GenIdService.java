@@ -24,4 +24,12 @@ public class GenIdService {
         );
         return counter.getSeq();
     }
+
+    public int getCurrentId(String seqName){
+        CustomSequences counter = mongo.findOne(
+                query(where("_id").is(seqName)),
+                CustomSequences.class
+        );
+        return counter.getSeq();
+    }
 }

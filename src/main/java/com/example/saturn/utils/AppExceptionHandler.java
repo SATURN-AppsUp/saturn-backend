@@ -45,8 +45,9 @@ public class AppExceptionHandler {
     @ResponseBody
     public ResponseEntity<ApiResponse> customErrorHandle(MethodArgumentNotValidException exception) {
         System.out.println(exception);
+        String message = exception.getBindingResult().getFieldError().getField()+" "+ exception.getBindingResult().getFieldError().getDefaultMessage();
         return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST,
-                exception.getBindingResult().getFieldError().getDefaultMessage(),
+                message,
                 List.of()),HttpStatus.BAD_REQUEST);
     }
 
