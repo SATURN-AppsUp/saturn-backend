@@ -1,8 +1,10 @@
 package com.example.saturn.models.requests;
 
 import com.example.saturn.models.SKUVariety;
+import com.example.saturn.models.enums.ProductCondition;
 import com.example.saturn.models.enums.SKUStatus;
 import com.example.saturn.models.enums.SaleType;
+import com.example.saturn.models.enums.ShippingType;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.mongodb.lang.NonNullApi;
@@ -25,14 +27,16 @@ public class SKURequest {
     private String brand="";
     @NotEmpty
     private String name="";
-    @NotEmpty
-    private String packaging="";
     @Nullable
     private String categoryCode="";
     @Nullable
     private String productType="";
     @Nullable
     private SaleType saleType;
+    @Nullable
+    private ShippingType shippingType;
+    @Nullable
+    private ProductCondition productCondition;
     @Nullable
     @JsonSetter(nulls =  Nulls.SKIP)
     private String unitOfMeasure="";

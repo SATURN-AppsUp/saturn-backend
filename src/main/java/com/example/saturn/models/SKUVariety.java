@@ -13,4 +13,8 @@ public class SKUVariety {
     private double tax;
     private int availableQuantity;
     private boolean isDefault;
+
+    public boolean isValid() {
+        return unitPrice >=0 && availableQuantity >=0;
+    }
 }
