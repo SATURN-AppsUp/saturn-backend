@@ -21,6 +21,10 @@ public class SKUController {
 
     private final SKUService skuService;
 
+    @GetMapping("/sku-options")
+    public ResponseEntity getSKUOptions() {
+
+    }
     @GetMapping
     public ResponseEntity getSKU() {
         return ResponseEntity.ok("OK");

@@ -29,6 +29,18 @@ public class CategoryService {
         return template.find(query, Category.class);
     }
 
+    public Category createCategory(String categoryName) {
+        String categoryCode = "";
+        if (categoryName.isEmpty()) {
+            throw new IllegalArgumentException("category name must not be empty");
+        } else
+        {
+            categoryCode = "CAT_" + service.getCurrentId("category");
+        }
+        var createCategory = new Category(service.genNextId("category"), categoryCode,categoryName);
+        return template.insert(createCategory);
+    }
+
     public Category createCategory(String categoryName, String categoryCode) {
         if (categoryName.isEmpty()) {
             throw new IllegalArgumentException("category name must not be empty");

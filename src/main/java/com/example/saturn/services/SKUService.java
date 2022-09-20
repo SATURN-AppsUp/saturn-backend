@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
@@ -73,6 +74,10 @@ public class SKUService {
         }
         return template.find(query,SKU.class);
     }
+
+//    public Map<String,String> getSKUOptions() {
+//
+//    }
     public SKU createSKU(SKUCreateRequest sku) {
 //      validate sku from sellerCode
         if (!sku.getSku().isEmpty())
@@ -98,12 +103,23 @@ public class SKUService {
 //      validate category
         var categoryName = "";
         if (sku.getCategoryCode() == null) {
+            if (!sku.getCategoryName().isEmpty())
+            {
+                var newCat = categoryService.createCategory(sku.getCategoryName());
+                sku.setCategoryCode(newCat.getCategoryCode());
+            }
             var unlistedCat = template.findOne(Query.query(where("categoryCode").is("UNLISTED")), Category.class);
             if (unlistedCat != null && !unlistedCat.getCategoryCode().isEmpty() && !unlistedCat.getCategoryName().isEmpty()) {
                 sku.setCategoryCode(unlistedCat.getCategoryCode());
                 categoryName = unlistedCat.getCategoryName();
             } else {
                 categoryService.createCategory("UNLISTED","CAT_UNLISTED");
+            }
+        } else if (!sku.getCategoryCode().isEmpty())
+        {
+            var cat = template.findOne(Query.query(where("categoryCode").is(sku.getCategoryCode())), Category.class);
+            if (cat == null) {
+                throw new IllegalArgumentException("category doesn't exist");
             }
         }
 

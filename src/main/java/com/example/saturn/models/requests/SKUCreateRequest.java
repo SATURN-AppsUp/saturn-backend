@@ -29,6 +29,8 @@ public class SKUCreateRequest {
     private String packaging;
     @Nullable
     private String categoryCode;
+    @Nullable
+    private String categoryName;
     @NotNull
     private ProductType productType;
     //    only availble to ORDER productType
