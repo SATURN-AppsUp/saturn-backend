@@ -2,6 +2,7 @@ package com.example.saturn.models.requests;
 
 import com.example.saturn.models.SKUVariety;
 import com.example.saturn.models.enums.*;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.mongodb.lang.NonNullApi;
@@ -30,14 +31,15 @@ public class SKUCreateRequest {
     @Nullable
     private String categoryCode;
     @Nullable
-    private String categoryName;
+    @JsonSetter(nulls = Nulls.SKIP)
+    private String categoryName="";
     @NotNull
     private ProductType productType;
     //    only availble to ORDER productType
     @Nullable
     @Min(0)
     private int minimumFulfillmentDays;
-    //  only available to IN-STOCK productType, default 0 for other types
+    //  only available to ORDER productType, default 0 for other types
     @Nullable
     @JsonSetter(nulls = Nulls.SKIP)
     private int stockQuantity=0;
@@ -68,5 +70,6 @@ public class SKUCreateRequest {
     @JsonSetter(nulls =  Nulls.SKIP)
     private int availableQuantity=0;
     @Nullable
+    @JsonFormat(pattern="dd-MM-yyyy")
     private LocalDate expiryDate;
 }

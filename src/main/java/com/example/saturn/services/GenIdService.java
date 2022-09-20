@@ -30,6 +30,13 @@ public class GenIdService {
                 query(where("_id").is(seqName)),
                 CustomSequences.class
         );
+        if (counter == null) {
+            return mongo.findAndModify(
+                    query(where("_id").is(seqName)),new Update().inc("seq",1),
+                    options().returnNew(true).upsert(true),
+                    CustomSequences.class
+            ).getSeq();
+        }
         return counter.getSeq();
     }
 }

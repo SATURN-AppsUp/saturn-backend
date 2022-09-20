@@ -21,13 +21,17 @@ public class SKUController {
 
     private final SKUService skuService;
 
-    @GetMapping("/sku-options")
-    public ResponseEntity getSKUOptions() {
-
-    }
+//    @GetMapping("/sku-options")
+//    public ResponseEntity getSKUOptions() {
+//
+//    }
     @GetMapping
-    public ResponseEntity getSKU() {
-        return ResponseEntity.ok("OK");
+    public ResponseEntity getSKU(SKURequest skuRequest) {
+        var result = skuService.getSKUs(skuRequest);
+        if (result.isEmpty()) {
+            return ApiResponseHandler.RespondError(HttpStatus.BAD_REQUEST,"not found any sku","SKU_NOT_FOUND");
+        }
+        return ApiResponseHandler.Respond(HttpStatus.OK,"query sku successfully", List.of(result));
     }
 
     @PostMapping

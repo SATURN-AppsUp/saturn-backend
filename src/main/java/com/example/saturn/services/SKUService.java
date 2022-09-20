@@ -101,19 +101,21 @@ public class SKUService {
         }
 
 //      validate category
-        var categoryName = "";
         if (sku.getCategoryCode() == null) {
             if (!sku.getCategoryName().isEmpty())
             {
                 var newCat = categoryService.createCategory(sku.getCategoryName());
                 sku.setCategoryCode(newCat.getCategoryCode());
             }
-            var unlistedCat = template.findOne(Query.query(where("categoryCode").is("UNLISTED")), Category.class);
-            if (unlistedCat != null && !unlistedCat.getCategoryCode().isEmpty() && !unlistedCat.getCategoryName().isEmpty()) {
-                sku.setCategoryCode(unlistedCat.getCategoryCode());
-                categoryName = unlistedCat.getCategoryName();
-            } else {
-                categoryService.createCategory("UNLISTED","CAT_UNLISTED");
+            else {
+                var unlistedCat = template.findOne(Query.query(where("categoryCode").is("UNLISTED")), Category.class);
+                if (unlistedCat != null && !unlistedCat.getCategoryCode().isEmpty() && !unlistedCat.getCategoryName().isEmpty()) {
+                    sku.setCategoryCode(unlistedCat.getCategoryCode());
+                     sku.setCategoryName(unlistedCat.getCategoryName());
+                } else {
+                    categoryService.createCategory("UNLISTED","CAT_UNLISTED");
+                    sku.setCategoryName("UNLISTED");
+                }
             }
         } else if (!sku.getCategoryCode().isEmpty())
         {
@@ -199,7 +201,7 @@ public class SKUService {
                 sku.getName(),
                 sku.getPackaging(),
                 sku.getCategoryCode(),
-                categoryName,
+                sku.getCategoryName(),
                 sku.getProductType(),
                 sku.getMinimumFulfillmentDays(),
                 sku.getStockQuantity(),
