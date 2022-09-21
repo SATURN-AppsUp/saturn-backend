@@ -31,7 +31,7 @@ public class SKUController {
         if (result.isEmpty()) {
             return ApiResponseHandler.RespondError(HttpStatus.BAD_REQUEST,"not found any sku","SKU_NOT_FOUND");
         }
-        return ApiResponseHandler.Respond(HttpStatus.OK,"query sku successfully", List.of(result));
+        return ApiResponseHandler.Respond(HttpStatus.OK,"query sku successfully", result);
     }
 
     @PostMapping
