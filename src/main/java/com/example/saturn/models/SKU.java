@@ -46,4 +46,5 @@ public class SKU {
     private int availableQuantity;
     private int reservedQuantity;
     private LocalDate expiryDate;
+    private double unitPrice;
 }

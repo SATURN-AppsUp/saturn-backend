@@ -9,6 +9,7 @@ import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
 import com.mongodb.lang.NonNullApi;
 import com.mongodb.lang.Nullable;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -16,6 +17,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Data
+@AllArgsConstructor
 public class SKURequest {
     @Nullable
     @JsonSetter(nulls =  Nulls.SKIP)

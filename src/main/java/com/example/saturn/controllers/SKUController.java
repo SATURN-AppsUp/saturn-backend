@@ -1,5 +1,6 @@
 package com.example.saturn.controllers;
 
+import com.example.saturn.models.Category;
 import com.example.saturn.models.SKU;
 import com.example.saturn.models.requests.ApiResponse;
 import com.example.saturn.models.requests.SKUCreateRequest;
@@ -32,6 +33,15 @@ public class SKUController {
             return ApiResponseHandler.RespondError(HttpStatus.BAD_REQUEST,"not found any sku","SKU_NOT_FOUND");
         }
         return ApiResponseHandler.Respond(HttpStatus.OK,"query sku successfully", result);
+    }
+
+    @GetMapping("/category")
+    public ResponseEntity getSKUCategory(@RequestParam(required = false) String categoryName, @RequestParam(required = false) String categoryCode) {
+        var result = skuService.getSKUCategoryList(categoryCode, categoryName);
+        if (result.size() == 0 ) {
+            return ApiResponseHandler.RespondError(HttpStatus.BAD_REQUEST,"not found any category","CATEGORY_NOT_FOUND");
+        }
+        return ApiResponseHandler.Respond(HttpStatus.OK,"query category successfully", result);
     }
 
     @PostMapping

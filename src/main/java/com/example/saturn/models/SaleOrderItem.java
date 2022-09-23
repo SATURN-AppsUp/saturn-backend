@@ -1,12 +1,16 @@
 package com.example.saturn.models;
 
 import com.example.saturn.models.enums.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.Indexed;
 
 import java.time.LocalDate;
 import java.util.List;
 
+@Data
+@AllArgsConstructor
 public class SaleOrderItem {
     @Id
     private int id;
@@ -18,14 +22,12 @@ public class SaleOrderItem {
     private String packaging;
     private String categoryCode;
     private String categoryName;
-    //    ORDER/ IN-STOCK
-    private ProductType productType;
     private int orderQuantity;
     private int reservedQuantity;
     private RentInformation rentInformation;
-    private List<SKUVariety> varietyList;
+    private String color;
+    private String size;
     private String unitOfMeasure;
-    private SKUStatus status;
-    private ProductCondition productCondition;
+    private OrderItemStatus status;
     private LocalDate expiryDate;
 }

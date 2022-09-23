@@ -1,6 +1,7 @@
 package com.example.saturn.services;
 
 import com.example.saturn.models.CustomSequences;
+import com.example.saturn.models.enums.DomainCode;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.mongodb.core.FindAndModifyOptions;
 import org.springframework.data.mongodb.core.MongoOperations;
@@ -25,17 +26,19 @@ public class GenIdService {
         return counter.getSeq();
     }
 
+    public String genNextCode(String code) {
+        var id = getCurrentId(code.toString());
+        var finalCode = code + "-"+id;
+        return finalCode;
+    }
+
     public int getCurrentId(String seqName){
         CustomSequences counter = mongo.findOne(
                 query(where("_id").is(seqName)),
                 CustomSequences.class
         );
         if (counter == null) {
-            return mongo.findAndModify(
-                    query(where("_id").is(seqName)),new Update().inc("seq",1),
-                    options().returnNew(true).upsert(true),
-                    CustomSequences.class
-            ).getSeq();
+            return genNextId(seqName);
         }
         return counter.getSeq();
     }

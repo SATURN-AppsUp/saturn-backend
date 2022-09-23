@@ -75,6 +75,16 @@ public class SKUService {
         return template.find(query,SKU.class);
     }
 
+    public List<Category> getSKUCategoryList(String code, String name) {
+        var query = new Query();
+        if (name != null && !name.isEmpty()) {
+            query.addCriteria(where("categoryName").is(name));
+        }
+        if (code != null && !code.isEmpty()) {
+            query.addCriteria(where("categoryCode").is(code));
+        }
+        return template.find(query,Category.class);
+    }
 //    public Map<String,String> getSKUOptions() {
 //
 //    }
@@ -165,6 +175,7 @@ public class SKUService {
         }
 
 //       validate variety list
+        double unitPrice=0.0;
         if (sku.getVarietyList().size() == 0) {
             throw new IllegalArgumentException("Variety list can't be null");
         }
@@ -173,6 +184,7 @@ public class SKUService {
            if (!varietyDao.isValid(defaultVariety)) {
                throw new IllegalArgumentException("default variety's is not valid (unit price & quantity >= 0");
            }
+           unitPrice = defaultVariety.getUnitPrice();
         }
 
 //       validate shipping type & price
@@ -217,7 +229,8 @@ public class SKUService {
                 sku.getShippingPrice(),
                 sku.getAvailableQuantity(),
                 0,
-                sku.getExpiryDate()
+                sku.getExpiryDate(),
+                unitPrice
                 );
         return template.insert(createdSKU);
     }
