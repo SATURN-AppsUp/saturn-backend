@@ -1,12 +1,18 @@
 package com.example.saturn.models.enums;
 
-public enum PaymentMethod {
+public enum PaymentMethodEnum {
     COD("COD"),
     BANK("BANK");
 
     private final String value;
 
-    PaymentMethod(String value){
+
+
+    PaymentMethodEnum(String value){
         this.value = value;
+    }
+
+    public String value() {
+        return this.value;
     }
 }

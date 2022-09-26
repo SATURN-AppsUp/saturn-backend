@@ -1,10 +1,7 @@
 package com.example.saturn.services;
 
 
-import com.example.saturn.models.Category;
-import com.example.saturn.models.SKU;
-import com.example.saturn.models.SKUVariety;
-import com.example.saturn.models.Seller;
+import com.example.saturn.models.*;
 import com.example.saturn.models.dao.BaseDao;
 import com.example.saturn.models.dao.VarietyDao;
 import com.example.saturn.models.enums.ProductType;
@@ -33,6 +30,7 @@ public class SKUService {
     private final CategoryService categoryService;
 
     private final BaseDao<SKUVariety> varietyDao;
+
     public List<SKU> getSKUs(SKURequest sku) {
         var query = new Query();
         if (!sku.getSku().isEmpty()) {
@@ -110,7 +108,7 @@ public class SKUService {
             }
         }
 
-//      validate category
+//      validate category: if pass
         if (sku.getCategoryCode() == null) {
             if (!sku.getCategoryName().isEmpty())
             {

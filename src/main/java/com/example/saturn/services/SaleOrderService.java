@@ -2,20 +2,17 @@ package com.example.saturn.services;
 
 
 import com.example.saturn.models.*;
-import com.example.saturn.models.enums.DomainCode;
-import com.example.saturn.models.enums.OrderItemStatus;
-import com.example.saturn.models.enums.SKUStatus;
-import com.example.saturn.models.enums.SaleOrderStatus;
-import com.example.saturn.models.requests.SKURequest;
-import com.example.saturn.models.requests.SaleOrderCreateRequest;
-import com.example.saturn.models.requests.SaleOrderSKU;
+import com.example.saturn.models.dao.PaymentMethodDAO;
+import com.example.saturn.models.enums.*;
+import com.example.saturn.models.requests.*;
 import lombok.AllArgsConstructor;
-import org.hibernate.validator.internal.util.DomainNameUtil;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
@@ -25,10 +22,98 @@ import static org.springframework.data.mongodb.core.query.Criteria.where;
 public class SaleOrderService {
 
     private final MongoTemplate template;
-    private final SKUService skuService;
-    private final SellerService sellerService;
     private final GenIdService genIdService;
 
+
+    public SaleOrder confirmSaleOrder(SaleOrderConfirmRequest request, int userId) {
+        var seller = template.findOne(Query.query(where("sellerCode").is(request.getSellerCode())),Seller.class);
+        var saleOrder = template.findOne(Query.query(where("saleOrderCode").is(request.getSaleOrderCode())),SaleOrder.class);
+        if (seller == null) {
+            throw new IllegalArgumentException("not found any seller");
+        }
+
+        if (saleOrder == null) {
+            throw new IllegalArgumentException("not found any sale order");
+        }
+
+        if (request.getEstimatedDeliveryDate().isBefore(LocalDate.now())) {
+            throw new IllegalArgumentException("delivery date must be after today");
+        }
+
+        if (saleOrder.getStatus() != SaleOrderStatus.WAIT_TO_CONFIRM) {
+            throw new IllegalArgumentException("only WAIT_TO_CONFIRM orders can be processed");
+        }
+
+        var confirmLog = new SaleOrderLog(SaleOrderStatus.CONFIRMED, userId, LocalDateTime.now());
+
+        List<SaleOrderLog> SOLog = saleOrder.getTrackingLogs() != null  ? saleOrder.getTrackingLogs() : new ArrayList<>();
+        SOLog.add(confirmLog);
+        saleOrder.setTrackingLogs(SOLog);
+        saleOrder.setStatus(SaleOrderStatus.CONFIRMED);
+        return template.save(saleOrder,"saleOrder");
+    }
+
+    public SaleOrder checkoutSaleorder(SaleOrderCheckoutRequest request, int userId) {
+        if (userId <=0) {
+            throw new IllegalArgumentException("userId is invalid");
+        }
+        var saleOrder = template.findOne(Query.query(
+                where("saleOrderCode").is(request.getSaleOrderCode()).
+                        andOperator(
+                                where("userId").is(userId))),SaleOrder.class);
+        if (saleOrder == null) {
+            throw new IllegalArgumentException("not found any matched sale order code");
+        }
+        var paymentMethod = PaymentMethodDAO.getPaymentInfo(request.getPaymentMethodCode());
+        if (paymentMethod == null) {
+            throw new IllegalArgumentException("not found any payment method");
+        }
+        if (saleOrder.getStatus() != SaleOrderStatus.DRAFT) {
+            throw new IllegalArgumentException("sale order status is invalid (must be DRAFT to checkout)");
+        }
+        saleOrder.setPaymentMethodCode(paymentMethod.getMethodCode());
+        saleOrder.setPaymentMethodName(paymentMethod.getMethodName());
+        saleOrder.setDeliveryAddress(request.getDeliveryAddress());
+        saleOrder.setStatus(SaleOrderStatus.WAIT_TO_CONFIRM);
+        return template.save(saleOrder,"saleOrder");
+
+    }
+    public List<SaleOrder> getSaleOrders(SaleOrderRequest request) {
+        var query = new Query();
+        if (request.getUserId() > 0) {
+            query.addCriteria(where("userId").is(request.getUserId()));
+        }
+
+        if (request.getSaleOrderCode() != null) {
+            query.addCriteria(where("saleOrderCode").is(request.getSaleOrderCode()));
+        }
+
+        if (request.getPaymentMethod() != null) {
+            var paymentCode = PaymentMethodEnum.valueOf(request.getPaymentMethod());
+            query.addCriteria(where("paymentMethodCode").is(paymentCode));
+        }
+
+        if (request.getSaleType() != null) {
+            var saleType = SaleType.valueOf(request.getSaleType());
+            query.addCriteria(where("saleType").is(saleType));
+        }
+
+        if (request.getStatus() != null) {
+            var status = SaleOrderStatus.valueOf(request.getStatus());
+            query.addCriteria(where("status").is(status));
+        }
+
+        if (request.getShippingType() != null) {
+            var shippingType = PaymentMethodEnum.valueOf(request.getShippingType());
+            query.addCriteria(where("shippingType").is(shippingType));
+        }
+
+        if (query.getQueryObject().size() == 0){
+            return template.findAll(SaleOrder.class);
+        }
+
+        return template.find(query,SaleOrder.class);
+    }
     public SaleOrder createSaleOrder(SaleOrderCreateRequest request) {
         System.out.println(request);
         if (request.getUserId() <= 0) {
@@ -47,7 +132,6 @@ public class SaleOrderService {
         var createdOrders = List.of();
         var sellerCode = request.getSKU().getSKU().split("\\.")[0];
 //      check if user has orders with this seller
-        System.out.println(sellerCode);
         var seller = template.findOne(Query.query(where("sellerCode").is(sellerCode)),Seller.class);
 
         if (seller == null) {
@@ -60,14 +144,19 @@ public class SaleOrderService {
             throw new IllegalArgumentException("Not found any SKU");
         }
 
-
-        var orderWithSeller = template.findOne(Query.query(where("sellerCode").is(sellerCode)),SaleOrder.class);
+        var orderWithSeller = template.findOne(Query.query(where("sellerCode").is(sellerCode).andOperator(where("userId").is(request.getUserId()))),SaleOrder.class);
 
         if (orderWithSeller != null) {
+//          check if sku already in this order
+            var saleOrderItem = template.findOne(Query.query(where("sku").is(sku.getSku()).andOperator(where("saleOrderCode").is(orderWithSeller.getSaleOrderCode()))),SaleOrderItem.class);
+            if (saleOrderItem != null) {
+                throw new IllegalArgumentException("This product has already been placed for order");
+            }
             addSaleOrderItems(request.getSKU(),orderWithSeller.getSaleOrderCode());
             return orderWithSeller;
         }
         else {
+            var createdLog = new SaleOrderLog(SaleOrderStatus.DRAFT,request.getUserId(),LocalDateTime.now());
             var newSO = new SaleOrder(
                     genIdService.genNextId("SALE_ORDER"),
                     request.getUserId(),
@@ -76,14 +165,17 @@ public class SaleOrderService {
                     seller.getSellerName(),
                     null,
                     null,
-                    LocalDate.now(),
+                    LocalDateTime.now(),
                     null,
                     null,
                     request.getSKU().getQuantity() * sku.getUnitPrice(),
                     request.getSaleType(),
                     SaleOrderStatus.DRAFT,
                     null,
-                    null
+                    null,
+                    null,
+                    null,
+                    List.of(createdLog)
                     );
             var createdOrder = template.insert(newSO);
             addSaleOrderItems(request.getSKU(),createdOrder.getSaleOrderCode());
@@ -97,9 +189,6 @@ public class SaleOrderService {
 //            }
 //        });
 
-    }
-    public List<SaleOrder> getSaleOrders(SaleOrder saleOrder) {
-        return List.of();
     }
     public SaleOrderItem addSaleOrderItems(SaleOrderSKU item, String saleOrderCode) {
         var sku = template.findOne(Query.query(where("sku").is(item.getSKU())),SKU.class);
@@ -125,7 +214,6 @@ public class SaleOrderService {
                 OrderItemStatus.DRAFT,
                 null
                );
-        var insertedSOItem = template.insert(SOItem);
-        return insertedSOItem;
+        return template.insert(SOItem);
     }
 }

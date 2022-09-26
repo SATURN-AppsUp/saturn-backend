@@ -8,11 +8,13 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BeanPropertyBindingResult;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.context.request.WebRequest;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
@@ -24,10 +26,10 @@ import java.util.List;
 @ControllerAdvice
 public class AppExceptionHandler {
 
-    @ExceptionHandler(value={Exception.class})
-    public ResponseEntity<ApiResponse> otherErrorHandle(Exception e) {
+    @ExceptionHandler(value={BindException.class})
+    public ResponseEntity<ApiResponse> otherErrorHandle(BindException e) {
         return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                e.getMessage(),
+                e.getBindingResult().getFieldError().getDefaultMessage(),
                 List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 //    @ExceptionHandler(value={ApiRequestException.class})
@@ -67,10 +69,17 @@ public class AppExceptionHandler {
 
     @ExceptionHandler(DateTimeParseException.class)
     @ResponseBody
-    public ResponseEntity<ApiResponse> IllegalArgumentHandle(DateTimeParseException exception) {
+    public ResponseEntity<ApiResponse> DateTimeParseHandle(DateTimeParseException exception) {
         return new ResponseEntity<ApiResponse>(new ApiResponse(HttpStatus.BAD_REQUEST,
                 exception.getMessage(),
                 List.of()),HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(ResponseStatusException.class)
+    @ResponseBody
+    public ResponseEntity<ApiResponse> ResponseStatusHandle(ResponseStatusException exception){
+        return new ResponseEntity<ApiResponse>(new ApiResponse(exception.getStatus(),
+                exception.getMessage(),
+                List.of()),exception.getStatus());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

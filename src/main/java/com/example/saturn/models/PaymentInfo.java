@@ -1,8 +1,7 @@
 package com.example.saturn.models;
 
 
-import com.example.saturn.models.enums.AccountStatus;
-import com.example.saturn.models.enums.PaymentMethod;
+import com.example.saturn.models.enums.PaymentMethodEnum;
 import com.mongodb.lang.Nullable;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
@@ -11,7 +10,7 @@ import org.springframework.data.annotation.Id;
 public class PaymentInfo {
     @Id
     private int id;
-    private PaymentMethod paymentMethod;
+    private PaymentMethodEnum paymentMethodEnum;
     @Nullable
     private String bankCode;
     @Nullable

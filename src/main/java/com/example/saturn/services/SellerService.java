@@ -61,8 +61,8 @@ public class SellerService {
         if (seller.getStatus() != null && !seller.getStatus().toString().isEmpty()) {
             query.addCriteria(where("status").is(seller.getStatus()));
         }
-        if (seller.getPaymentMethods() != null && !seller.getPaymentMethods().isEmpty()) {
-            query.addCriteria(where("acceptedPaymentMethods").all(seller.getPaymentMethods()));
+        if (seller.getPaymentMethodEnums() != null && !seller.getPaymentMethodEnums().isEmpty()) {
+            query.addCriteria(where("acceptedPaymentMethods").all(seller.getPaymentMethodEnums()));
         }
         if (query.getQueryObject().size() == 0) {
             return template.findAll(Seller.class);
@@ -96,7 +96,7 @@ public class SellerService {
             throw new IllegalArgumentException("another seller with this seller code has already existed");
         }
 
-        if (seller.getAcceptedPaymentMethods().size() == 0)
+        if (seller.getAcceptedPaymentMethodEnums().size() == 0)
         {
             throw new IllegalArgumentException("Seller must have at lease one payment method");
         }
@@ -108,7 +108,7 @@ public class SellerService {
                 seller.getSellerName(),
                 false,
                 seller.getSellerAdress(),
-                seller.getAcceptedPaymentMethods(),
+                seller.getAcceptedPaymentMethodEnums(),
                 SellerStatus.ACTIVATED
                 );
         return sellerRepo.insert(newSeller);

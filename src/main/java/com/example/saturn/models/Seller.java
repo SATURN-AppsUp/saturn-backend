@@ -1,5 +1,5 @@
 package com.example.saturn.models;
-import com.example.saturn.models.enums.PaymentMethod;
+import com.example.saturn.models.enums.PaymentMethodEnum;
 import com.example.saturn.models.enums.SellerStatus;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +23,7 @@ public class Seller {
     private String sellerName;
     private boolean isVerified;
     private String sellerAdress;
-    private List<PaymentMethod> acceptedPaymentMethods;
+    private List<PaymentMethodEnum> acceptedPaymentMethodEnums;
     private SellerStatus status;
 
 }

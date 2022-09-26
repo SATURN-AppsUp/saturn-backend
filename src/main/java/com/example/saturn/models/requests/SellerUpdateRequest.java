@@ -1,6 +1,6 @@
 package com.example.saturn.models.requests;
 
-import com.example.saturn.models.enums.PaymentMethod;
+import com.example.saturn.models.enums.PaymentMethodEnum;
 import com.example.saturn.models.enums.SellerStatus;
 import lombok.Data;
 
@@ -14,7 +14,7 @@ public class SellerUpdateRequest {
     private int id;
     private String sellerCode;
     private String sellerAdress;
-    private List<PaymentMethod> acceptedPaymentMethods;
+    private List<PaymentMethodEnum> acceptedPaymentMethodEnums;
     private SellerStatus status;
 
 }

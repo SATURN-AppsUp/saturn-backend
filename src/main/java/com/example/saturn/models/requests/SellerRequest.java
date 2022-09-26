@@ -1,6 +1,6 @@
 package com.example.saturn.models.requests;
 
-import com.example.saturn.models.enums.PaymentMethod;
+import com.example.saturn.models.enums.PaymentMethodEnum;
 import com.example.saturn.models.enums.SellerStatus;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
@@ -25,5 +25,5 @@ public class SellerRequest {
     @Nullable
     private SellerStatus status;
     @Nullable
-    private List<PaymentMethod> paymentMethods;
+    private List<PaymentMethodEnum> paymentMethodEnums;
 }
