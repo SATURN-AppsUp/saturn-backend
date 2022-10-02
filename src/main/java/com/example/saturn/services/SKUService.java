@@ -32,6 +32,8 @@ public class SKUService {
     private final BaseDao<SKUVariety> varietyDao;
 
     public List<SKU> getSKUs(SKURequest sku) {
+        System.out.println(sku);
+
         var query = new Query();
         if (!sku.getSku().isEmpty()) {
             query.addCriteria(where("sku").is(sku.getSku()));

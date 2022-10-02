@@ -29,7 +29,7 @@ public class AppExceptionHandler {
     @ExceptionHandler(value={BindException.class})
     public ResponseEntity<ApiResponse> otherErrorHandle(BindException e) {
         return new ResponseEntity(new ApiResponse(HttpStatus.INTERNAL_SERVER_ERROR,
-                e.getBindingResult().getFieldError().getDefaultMessage(),
+                e.getBindingResult().getFieldError().getField()+": "+e.getBindingResult().getFieldError().getDefaultMessage(),
                 List.of()),HttpStatus.INTERNAL_SERVER_ERROR);
     }
 //    @ExceptionHandler(value={ApiRequestException.class})

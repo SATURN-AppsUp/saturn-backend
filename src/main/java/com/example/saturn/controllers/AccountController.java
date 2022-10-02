@@ -23,7 +23,7 @@ public class AccountController {
 
     @GetMapping
     private ResponseEntity getAccount(AccountRequest request) {
-//        System.out.println(bindingResult);
+        System.out.println(request);
         var accounts  = accountService.getAccounts(request);
         if (accounts.size() > 0 )
             return  ApiResponseHandler.Respond(

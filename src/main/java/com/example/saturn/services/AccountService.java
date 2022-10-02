@@ -83,8 +83,9 @@ public class AccountService
             query.addCriteria(where("phone").is(request.getPhone()));
         }
 
-        if (request.getStatus() != null && !request.getStatus().toString().isEmpty()) {
-            query.addCriteria(where("status").is(request.getStatus()));
+        if (request.getStatus() != null) {
+            var accountStatus = AccountStatus.valueOf(request.getStatus());
+            query.addCriteria(where("status").is(accountStatus));
         }
 
         if (request.isSeller()) {
@@ -109,7 +110,7 @@ public class AccountService
         }
 
         if (query.getQueryObject().size() ==0){
-            result = accountRepo.findAll();
+            result = template.findAll(Account.class);
         }
         else result = template.find(query,Account.class);
 

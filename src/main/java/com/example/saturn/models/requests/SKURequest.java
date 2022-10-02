@@ -1,33 +1,24 @@
 package com.example.saturn.models.requests;
 
-import com.example.saturn.models.SKUVariety;
 import com.example.saturn.models.enums.ProductCondition;
-import com.example.saturn.models.enums.SKUStatus;
 import com.example.saturn.models.enums.SaleType;
 import com.example.saturn.models.enums.ShippingType;
 import com.fasterxml.jackson.annotation.JsonSetter;
 import com.fasterxml.jackson.annotation.Nulls;
-import com.mongodb.lang.NonNullApi;
 import com.mongodb.lang.Nullable;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
-import javax.validation.constraints.NotEmpty;
-import java.time.LocalDate;
-import java.util.List;
-
 @Data
-@AllArgsConstructor
 public class SKURequest {
     @Nullable
     @JsonSetter(nulls =  Nulls.SKIP)
     private String sku="";
-    @JsonSetter(nulls =  Nulls.SKIP)
+    @Nullable
+    @JsonSetter(nulls = Nulls.SKIP)
     private String sellerCode="";
     @Nullable
-    @JsonSetter(nulls =  Nulls.SKIP)
     private String brand="";
-    @NotEmpty
+    @Nullable
     private String name="";
     @Nullable
     private String categoryCode="";
@@ -45,6 +36,7 @@ public class SKURequest {
     @Nullable
 //    use Boolean instead of boolean to have null values
     private Boolean isActive;
+    @Nullable
     private int maximumOrderQuantity=0;
     @Nullable
     private int availableQuantity=0 ;

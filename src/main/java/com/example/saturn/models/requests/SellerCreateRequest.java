@@ -8,7 +8,6 @@ import javax.validation.constraints.NotEmpty;
 import java.util.List;
 
 @Data
-@AllArgsConstructor
 public class SellerCreateRequest {
     @NotEmpty(message = "username can not be null")
     private String username;

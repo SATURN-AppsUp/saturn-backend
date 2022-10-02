@@ -8,8 +8,6 @@ import com.mongodb.lang.Nullable;
 import lombok.Data;
 
 import java.util.List;
-
-
 @Data
 public class SellerRequest {
     @Nullable

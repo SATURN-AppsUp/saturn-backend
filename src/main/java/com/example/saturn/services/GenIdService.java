@@ -28,6 +28,7 @@ public class GenIdService {
 
     public String genNextCode(String code) {
         var id = getCurrentId(code.toString());
+        id+=1;
         var finalCode = code + "-"+id;
         return finalCode;
     }

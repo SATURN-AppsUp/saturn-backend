@@ -115,7 +115,6 @@ public class SaleOrderService {
         return template.find(query,SaleOrder.class);
     }
     public SaleOrder createSaleOrder(SaleOrderCreateRequest request) {
-        System.out.println(request);
         if (request.getUserId() <= 0) {
             throw new IllegalArgumentException("userId is not valid");
         }
@@ -129,22 +128,30 @@ public class SaleOrderService {
             throw new IllegalArgumentException("List SKU must not be empty");
         }
 
-        var createdOrders = List.of();
-        var sellerCode = request.getSKU().getSKU().split("\\.")[0];
-//      check if user has orders with this seller
-        var seller = template.findOne(Query.query(where("sellerCode").is(sellerCode)),Seller.class);
-
-        if (seller == null) {
-            throw new IllegalArgumentException("Not found any matched seller");
-        }
-
         var sku = template.findOne(Query.query(where("sku").is(request.getSKU().getSKU())),SKU.class);
 
         if (sku == null) {
             throw new IllegalArgumentException("Not found any SKU");
         }
+        if (sku.getAvailableQuantity() == 0 && sku.getProductType() == ProductType.IN_STOCK) {
+            throw new IllegalArgumentException("product is out of stock");
+        } else if (sku.getAvailableQuantity() - request.getSKU().getQuantity() < 0 ) {
+            throw new IllegalArgumentException("There is not enough available quantity in-stock to purchase");
+        }
 
-        var orderWithSeller = template.findOne(Query.query(where("sellerCode").is(sellerCode).andOperator(where("userId").is(request.getUserId()))),SaleOrder.class);
+        var sellerCode = request.getSKU().getSKU().split("\\.")[0];
+//      check if user has orders with this seller
+        var seller = template.findOne(Query.query(where("sellerCode").is(sellerCode)),Seller.class);
+        if (seller == null) {
+            throw new IllegalArgumentException("Not found any matched seller");
+        }
+
+        var orderWithSeller = template.findOne(Query.query(
+                where("sellerCode").is(sellerCode).
+                        andOperator(
+                                where("userId").is(request.getUserId()),
+                                where("status").is(SaleOrderStatus.DRAFT)
+                        )),SaleOrder.class);
 
         if (orderWithSeller != null) {
 //          check if sku already in this order
@@ -195,6 +202,14 @@ public class SaleOrderService {
         if (sku == null) {
             throw new IllegalArgumentException("Not found any SKU");
         }
+        if (sku.getAvailableQuantity() == 0 && sku.getProductType() == ProductType.IN_STOCK) {
+            throw new IllegalArgumentException("product is out of stock");
+        }
+        else if (sku.getAvailableQuantity() - item.getQuantity() < 0 ) {
+            throw new IllegalArgumentException("There is not enough available quantity in-stock to purchase");
+        }
+        sku.setAvailableQuantity(sku.getAvailableQuantity()-1);
+        template.save(sku);
         var SOItem = new SaleOrderItem(
                 genIdService.genNextId("SALE_ORDER_ITEM"),
                 item.getSKU(),

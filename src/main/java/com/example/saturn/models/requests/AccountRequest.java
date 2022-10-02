@@ -12,7 +12,6 @@ import javax.validation.constraints.Null;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 public class AccountRequest {
     private String username;
     @Nullable
@@ -24,7 +23,7 @@ public class AccountRequest {
     @Nullable
     private String email;
     @Nullable
-    private AccountStatus status;
+    private String status;
     @Nullable
     private Gender gender;
     @Nullable
