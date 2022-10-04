@@ -11,6 +11,7 @@ import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -22,8 +23,7 @@ public class AccountCreateRequest {
     private String password;
     @NotEmpty(message = "name can not be null")
     private String name;
-    @JsonFormat(pattern="dd-MM-yyyy")
-    private LocalDate dob;
+    private LocalDateTime dob;
     @NotEmpty(message = "phone cannot be null")
     private String phone;
     @NotEmpty(message = "email can not be null")

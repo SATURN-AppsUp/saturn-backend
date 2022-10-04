@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 
 import javax.validation.constraints.Null;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 public class AccountRequest {
@@ -17,7 +18,7 @@ public class AccountRequest {
     @Nullable
     private String name;
     @Nullable
-    private LocalDate dob;
+    private LocalDateTime dob;
     @Nullable
     private String phone;
     @Nullable

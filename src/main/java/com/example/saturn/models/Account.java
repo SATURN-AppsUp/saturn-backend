@@ -8,6 +8,7 @@ import lombok.Data;
 
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.data.annotation.Id;
@@ -22,7 +23,7 @@ public class Account {
     private String username;
     private String password;
     private String name;
-    private LocalDate dob;
+    private LocalDateTime dob;
     private String phone;
     @Indexed
     private String email;

@@ -10,6 +10,7 @@ import org.springframework.data.mongodb.core.index.Indexed;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -18,7 +19,7 @@ public class AccountProfileRepsonse {
     private int id;
     private String username;
     private String name;
-    private LocalDate dob;
+    private LocalDateTime dob;
     private String phone;
     private String email;
     private AccountStatus status;

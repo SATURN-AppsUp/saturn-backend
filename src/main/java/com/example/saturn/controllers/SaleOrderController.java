@@ -40,7 +40,7 @@ public class SaleOrderController {
     @GetMapping
     public ResponseEntity getSaleOrders(SaleOrderRequest request) {
         var result = saleOrderService.getSaleOrders(request);
-        if (result == null) {
+        if (result == null || result.size() == 0) {
             return ApiResponseHandler.RespondError(HttpStatus.NOT_FOUND, "not found any matched orders","SALE_ORDER_NOT_FOUND");
         }
         return ApiResponseHandler.Respond(HttpStatus.OK,"query sale orders successfully", result);
