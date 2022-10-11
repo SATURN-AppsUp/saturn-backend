@@ -1,6 +1,7 @@
 package com.example.saturn.controllers;
 
 import com.example.saturn.models.requests.*;
+import com.example.saturn.services.Job.TestSo;
 import com.example.saturn.services.SaleOrderService;
 import com.example.saturn.utils.ApiResponseHandler;
 import lombok.AllArgsConstructor;
@@ -37,6 +38,17 @@ public class SaleOrderController {
         return ApiResponseHandler.Respond(HttpStatus.OK, "successfully checked out order", List.of(checkedOutOrder));
 
     }
+
+//    @GetMapping("test-queue")
+//    public ResponseEntity getTestQueue() {
+//        return ApiResponseHandler.Respond(HttpStatus.OK, "OK", saleOrderService.getTestQueue());
+//    }
+//
+//    @PostMapping("test-queue")
+//    public ResponseEntity postTestQueue(@RequestBody TestSo so) {
+//        saleOrderService.insertTestQueue(so.getSaleOrderCode());
+//        return ApiResponseHandler.Respond(HttpStatus.OK, "OK", List.of());
+//    }
     @GetMapping
     public ResponseEntity getSaleOrders(SaleOrderRequest request) {
         var result = saleOrderService.getSaleOrders(request);

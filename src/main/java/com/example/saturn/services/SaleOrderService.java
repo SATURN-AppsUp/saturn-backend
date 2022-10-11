@@ -5,6 +5,7 @@ import com.example.saturn.models.*;
 import com.example.saturn.models.dao.PaymentMethodDAO;
 import com.example.saturn.models.enums.*;
 import com.example.saturn.models.requests.*;
+//import com.example.saturn.services.Job.SaleOrderProcessingService;
 import lombok.AllArgsConstructor;
 import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Query;
@@ -17,14 +18,13 @@ import java.util.List;
 
 import static org.springframework.data.mongodb.core.query.Criteria.where;
 
-@Service
 @AllArgsConstructor
-public class SaleOrderService {
+public class SaleOrderService implements Runnable {
 
     private final MongoTemplate template;
     private final GenIdService genIdService;
 
-
+//    private final SaleOrderProcessingService soProcessService;
     public SaleOrder confirmSaleOrder(SaleOrderConfirmRequest request, int userId) {
         var seller = template.findOne(Query.query(where("sellerCode").is(request.getSellerCode())),Seller.class);
         var saleOrder = template.findOne(Query.query(where("saleOrderCode").is(request.getSaleOrderCode())),SaleOrder.class);
@@ -114,6 +114,14 @@ public class SaleOrderService {
 
         return template.find(query,SaleOrder.class);
     }
+
+//    public List<SaleOrder> getTestQueue() {
+//        return template.findAll(SaleOrder.class);
+//    }
+//
+//    public void insertTestQueue(String order) {
+//        soProcessService.queueSaleOrder(order);
+//    }
     public SaleOrder createSaleOrder(SaleOrderCreateRequest request) {
         if (request.getUserId() <= 0) {
             throw new IllegalArgumentException("userId is not valid");
@@ -230,5 +238,10 @@ public class SaleOrderService {
                 null
                );
         return template.insert(SOItem);
+    }
+
+    @Override
+    public void run() {
+
     }
 }
