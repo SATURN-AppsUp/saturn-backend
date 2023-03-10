@@ -1,5 +1,6 @@
 package com.example.saturn.controllers;
 
+//import com.example.saturn.models.AmazonProduct;
 import com.example.saturn.models.Category;
 import com.example.saturn.models.SKU;
 import com.example.saturn.models.requests.ApiResponse;
@@ -52,6 +53,11 @@ public class SKUController {
         }
         else return ApiResponseHandler.RespondError(HttpStatus.INTERNAL_SERVER_ERROR,"sku created failed","SKU_CREATE_ERROR");
     }
+
+//    @PostMapping("/import")
+//    public ResponseEntity importSKU(@Valid @RequestBody List<AmazonProduct> amazonProductList) {
+//
+//    }
 
 //    @GetMapping
 //    public ResponseEntity getSKU(SKURequest request) {

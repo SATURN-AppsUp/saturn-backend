@@ -21,6 +21,10 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue createAmazonProductQueue() {
+        return new Queue("q.amazon-product-create");
+    }
+    @Bean
     public Jackson2JsonMessageConverter converter() {
         return new Jackson2JsonMessageConverter();
     }
