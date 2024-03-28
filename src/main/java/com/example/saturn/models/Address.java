@@ -10,8 +10,6 @@ public class Address {
     @NotEmpty
     private int userId;
     @NotEmpty
-    private String userCode;
-    @NotEmpty
     private String street;
     @NotEmpty
     private String ward;
