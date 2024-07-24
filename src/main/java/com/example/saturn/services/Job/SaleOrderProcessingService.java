@@ -1,8 +1,5 @@
 package com.example.saturn.services.Job;
 
-import com.example.saturn.models.SaleOrder;
-import org.springframework.stereotype.Service;
-
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 

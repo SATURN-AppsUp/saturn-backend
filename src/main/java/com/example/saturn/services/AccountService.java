@@ -1,6 +1,7 @@
 package com.example.saturn.services;
 
 import com.example.saturn.models.Account;
+import com.example.saturn.models.Role;
 import com.example.saturn.models.enums.AccountStatus;
 import com.example.saturn.models.requests.AccountCreateRequest;
 import com.example.saturn.models.requests.AccountRequest;
@@ -48,7 +49,8 @@ public class AccountService
                 0,
                 0,
                 0,
-                request.getAddressList()
+                request.getAddressList(),
+                Role.USER
         );
         var query = new Query();
         query.addCriteria(where("email").is(acc.getEmail()));

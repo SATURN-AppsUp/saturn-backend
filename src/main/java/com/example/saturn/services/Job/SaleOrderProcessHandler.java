@@ -1,12 +1,5 @@
 package com.example.saturn.services.Job;
 
-import com.example.saturn.models.SaleOrder;
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.MongoTemplate;
-import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.stereotype.Service;
-
 
 public class SaleOrderProcessHandler implements Runnable {
     String saleOrder;
